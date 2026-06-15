@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>User Dashboard - WorkSphere India</title>
+
+<link rel="stylesheet" href="style.css">
+
+<style>
+
+.dashboard{
+display:flex;
+min-height:100vh;
+}
+
+.sidebar{
+width:260px;
+background:#0b2447;
+color:white;
+padding:25px;
+}
+
+.sidebar h2{
+margin-bottom:30px;
+}
+
+.sidebar ul{
+list-style:none;
+}
+
+.sidebar ul li{
+margin-bottom:18px;
+}
+
+.sidebar ul li a{
+color:white;
+text-decoration:none;
+font-size:16px;
+}
+
+.main{
+flex:1;
+padding:30px;
+background:#f5f7fa;
+}
+
+.welcome-box{
+background:white;
+padding:25px;
+border-radius:15px;
+box-shadow:0 4px 10px rgba(0,0,0,0.08);
+margin-bottom:30px;
+}
+
+.stats{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:20px;
+}
+
+.stat{
+background:white;
+padding:25px;
+border-radius:15px;
+text-align:center;
+box-shadow:0 4px 10px rgba(0,0,0,0.08);
+}
+
+.stat h2{
+color:#19376d;
+margin-bottom:10px;
+}
+
+.tasks{
+margin-top:30px;
+background:white;
+padding:25px;
+border-radius:15px;
+box-shadow:0 4px 10px rgba(0,0,0,0.08);
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:15px;
+}
+
+table th,
+table td{
+padding:12px;
+border-bottom:1px solid #ddd;
+text-align:left;
+}
+
+.upload-btn{
+background:#f4b400;
+padding:10px 18px;
+border:none;
+border-radius:8px;
+cursor:pointer;
+font-weight:bold;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="dashboard">
+
+<div class="sidebar">
+
+<h2>WorkSphere</h2>
+
+<ul>
+<li><a href="/dashboard">Dashboard</a></li>
+<!--<li><a href="/admin">Admin Panel</a></li>-->
+<li><a href="/profile">Profile</a></li>
+<li><a href="/projects">Available Tasks</a></li>
+<li><a href="/mytasks">My Tasks</a></li>
+<li><a href="/upload">Upload Work</a></li>
+<li><a href="/earnings">Earnings</a></li>
+<li><a href="/withdraw">Withdraw Funds</a></li>
+<li><a href="/my-withdrawals">My Withdrawals</a></li>
+<li><a href="/support">Support</a></li>
+<a href="/logout">
+    <button>Logout</button>
+</a>
+</ul>
+
+</div>
+
+<div class="main">
+
+<div class="welcome-box">
+
+<h1 id="username">Welcome 👋</h1>
+
+<p>
+Manage your tasks, earnings and project submissions
+from one place.
+</p>
+
+</div>
+
+<div class="stats">
+
+<div class="stat">
+<h2 id="wallet">₹0</h2>
+<p>Wallet Balance</p>
+</div>
+
+<div class="stat">
+<h2 id="totalTasks">0</h2>
+<p>Total Tasks</p>
+</div>
+
+<div class="stat">
+<h2 id="approvedTasks">0</h2>
+<p>Approved Tasks</p>
+</div>
+
+<div class="stat">
+<h2 id="pendingTasks">0</h2>
+<p>Pending Tasks</p>
+</div>
+
+<div class="stat">
+<h2 id="rejectedTasks">0</h2>
+<p>Rejected Tasks</p>
+</div>
+
+</div>
+
+<div class="tasks">
+
+<h2>Available Projects</h2>
+
+<table>
+
+<tr>
+<th>Project</th>
+<th>Payment</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+
+<tr>
+<td>PDF To Word</td>
+<td>₹30/Page</td>
+<td>Available</td>
+<td>
+<form action="/apply" method="POST">
+    <input type="hidden"
+           name="projectName"
+           value="PDF To Word">
+
+    <button type="submit"
+            class="upload-btn">
+        Apply
+    </button>
+</form>
+</td>
+</tr>
+
+<tr>
+<td>Data Entry</td>
+<td>₹25/Page</td>
+<td>Available</td>
+<td>
+<form action="/apply" method="POST">
+    <input type="hidden"
+           name="projectName"
+           value="Data Entry">
+
+    <button type="submit"
+            class="upload-btn">
+        Apply
+    </button>
+</form>
+</td>
+</tr>
+
+<tr>
+<td>Document Formatting</td>
+<td>₹40/Page</td>
+<td>Available</td>
+<td>
+<form action="/apply" method="POST">
+    <input type="hidden"
+           name="projectName"
+           value="Document Formatting">
+
+    <button type="submit"
+            class="upload-btn">
+        Apply
+    </button>
+</form>
+</td>
+</tr>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+fetch("/dashboard-data")
+.then(res => res.json())
+.then(data => {
+
+document.getElementById("username").innerHTML =
+"Welcome, " + data.userName + " 👋";
+
+document.getElementById("totalTasks").innerHTML =
+data.totalTasks;
+
+document.getElementById("approvedTasks").innerHTML =
+data.approvedTasks;
+
+document.getElementById("pendingTasks").innerHTML =
+data.pendingTasks;
+
+document.getElementById("rejectedTasks").innerHTML =
+data.rejectedTasks;
+
+document.getElementById("wallet").innerHTML =
+"₹" + data.wallet;
+
+});
+
+</script>
+
+</body>
+</html>

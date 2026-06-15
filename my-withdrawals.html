@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>My Withdrawals</title>
+</head>
+<body>
+
+<h1>My Withdrawals</h1>
+
+<table border="1" cellpadding="10">
+<thead>
+<tr>
+<th>Amount</th>
+<th>UPI</th>
+<th>Status</th>
+<th>Date</th>
+</tr>
+</thead>
+
+<tbody id="withdrawTable"></tbody>
+
+</table>
+
+<script>
+
+fetch("/api/my-withdrawals")
+.then(res => res.json())
+.then(data => {
+
+let html = "";
+
+data.forEach(w => {
+
+html += `
+<tr>
+<td>₹${w.amount}</td>
+<td>${w.upi}</td>
+<td>${w.status}</td>
+<td>${new Date(w.requestDate).toLocaleDateString()}</td>
+</tr>
+`;
+
+});
+
+document.getElementById("withdrawTable").innerHTML = html;
+
+});
+
+</script>
+
+</body>
+</html>

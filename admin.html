@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Admin Panel</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<h1 style="padding:20px;">Admin Panel</h1>
+
+<a href="/admin-logout">
+    <button>Logout</button>
+</a>
+
+<div class="card" style="margin:20px; padding:20px;">
+
+<h2>Applications</h2>
+
+<table border="1" width="100%" cellpadding="10">
+
+<thead>
+<tr>
+<th>Project</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody id="applicationTable">
+
+</tbody>
+
+</table>
+
+</div>
+
+<div class="card" style="margin:20px; padding:20px;">
+
+<div class="card" style="margin:20px; padding:20px;">
+
+<h2>Withdrawal Requests</h2>
+
+<table border="1" width="100%" cellpadding="10">
+
+<thead>
+<tr>
+<th>Amount</th>
+<th>UPI</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody id="withdrawTable">
+
+</tbody>
+
+</table>
+
+</div>
+
+<h2>Uploaded Files</h2>
+
+<table border="1" width="100%" cellpadding="10">
+
+<thead>
+<tr>
+<th>Project</th>
+<th>File Name</th>
+<th>Upload Date</th>
+<th>Download</th>
+</tr>
+</thead>
+
+<tbody id="uploadTable">
+
+</tbody>
+
+</table>
+
+</div>
+
+<script>
+
+fetch("/api/admin/applications")
+.then(res => res.json())
+.then(data => {
+
+    let html = "";
+
+    data.forEach(app => {
+
+        html += `
+        <tr>
+            <td>${app.projectName}</td>
+            <td>${app.status}</td>
+
+            <td>
+
+            <form action="/approve/${app._id}" method="POST" style="display:inline;">
+                <button>Approve</button>
+            </form>
+
+            <form action="/reject/${app._id}" method="POST" style="display:inline;">
+                <button>Reject</button>
+            </form>
+
+            </td>
+
+        </tr>
+        `;
+
+    });
+
+    document.getElementById("applicationTable").innerHTML = html;
+
+});
+
+fetch("/api/admin/uploads")
+.then(res => res.json())
+.then(data => {
+
+    let html = "";
+
+    data.forEach(file => {
+
+        html += `
+<tr>
+    <td>${file.projectName}</td>
+
+    <td>${file.fileName}</td>
+
+    <td>
+        ${new Date(
+            file.uploadDate
+        ).toLocaleDateString()}
+    </td>
+
+    <td>
+        <a href="/download/${file.fileName}">
+            <button>
+                Download
+            </button>
+        </a>
+    </td>
+
+</tr>
+`;
+
+    });
+
+    document.getElementById(
+        "uploadTable"
+    ).innerHTML = html;
+
+});
+
+fetch("/api/admin/withdrawals")
+.then(res => res.json())
+.then(data => {
+
+    let html = "";
+
+    data.forEach(item => {
+
+        html += `
+        <tr>
+
+            <td>₹${item.amount}</td>
+
+            <td>${item.upi}</td>
+
+            <td>${item.status}</td>
+
+            <td>
+
+            <form action="/withdraw-approve/${item._id}"
+                  method="POST"
+                  style="display:inline;">
+
+                <button>
+                Approve
+                </button>
+
+            </form>
+
+            <form action="/withdraw-reject/${item._id}"
+                  method="POST"
+                  style="display:inline;">
+
+                <button>
+                Reject
+                </button>
+
+            </form>
+
+            </td>
+
+        </tr>
+        `;
+
+    });
+
+    document.getElementById(
+        "withdrawTable"
+    ).innerHTML = html;
+
+});
+
+</script>
+
+</body>
+</html>

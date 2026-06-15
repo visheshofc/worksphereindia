@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>My Tasks</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+<h1 style="padding:20px;">My Tasks</h1>
+</header>
+
+<section class="features">
+
+<div class="card">
+
+<h2>Applied Projects</h2>
+
+<table style="width:100%;margin-top:20px;">
+
+<thead>
+<tr>
+<th>Project</th>
+<th>Status</th>
+<th>Applied Date</th>
+</tr>
+</thead>
+
+<tbody id="taskTable">
+
+</tbody>
+
+</table>
+
+</div>
+
+</section>
+
+<script>
+
+fetch("/api/mytasks")
+.then(res => res.json())
+.then(tasks => {
+
+    let html = "";
+
+    tasks.forEach(task => {
+
+        html += `
+        <tr>
+            <td>${task.projectName}</td>
+            <td>${task.status}</td>
+            <td>${new Date(task.appliedAt).toLocaleDateString()}</td>
+        </tr>
+        `;
+
+    });
+
+    document.getElementById("taskTable").innerHTML = html;
+
+});
+
+</script>
+
+</body>
+</html>
