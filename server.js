@@ -38,6 +38,16 @@ pan: String,
 upi: String,
 password: String,
 
+role: {
+    type: String,
+    default: "user"
+},
+
+emailVerified: {
+    type: Boolean,
+    default: false
+},
+
 wallet: {
     type: Number,
     default: 0
