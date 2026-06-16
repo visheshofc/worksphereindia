@@ -446,10 +446,6 @@ try {
 req.session.userName = user.fullName;
 req.session.role = user.role;
 
-if(user.role === "admin"){
-    return res.redirect("/admin");
-}
-
 res.redirect("/dashboard");
 
 } catch (error) {
