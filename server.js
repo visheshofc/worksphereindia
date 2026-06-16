@@ -30,29 +30,45 @@ console.log("MongoDB Error:", err);
 
 // User Schema
 const UserSchema = new mongoose.Schema({
-fullname: String,
-email: String,
-mobile: String,
-aadhaar: String,
-pan: String,
-upi: String,
-password: String,
+  fullName: String,
 
-role: {
+  email: {
+    type: String,
+    unique: true
+  },
+
+  mobile: {
+    type: String,
+    unique: true
+  },
+
+  aadhaar: String,
+
+  pan: String,
+
+  upi: String,
+
+  password: String,
+
+  role: {
     type: String,
     default: "user"
-},
+  },
 
-emailVerified: {
+  emailVerified: {
     type: Boolean,
     default: false
-},
+  },
 
-wallet: {
+  mobileVerified: {
+    type: Boolean,
+    default: false
+  },
+
+  wallet: {
     type: Number,
     default: 0
-}
-
+  }
 });
 
 const AdminSchema = new mongoose.Schema({
