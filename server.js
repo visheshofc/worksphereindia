@@ -705,9 +705,11 @@ app.post("/reject/:id", async (req, res) => {
 
 app.get("/admin-logout", (req, res) => {
 
-    req.session.adminId = null;
+    req.session.destroy(() => {
 
-    res.redirect("/admin-login");
+        res.redirect("/login");
+
+    });
 
 });
 
