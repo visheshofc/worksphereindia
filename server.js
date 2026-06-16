@@ -6,6 +6,8 @@ const bcrypt = require("bcryptjs");
 const session = require("express-session");
 const multer = require("multer");
 const path = require("path");
+const nodemailer = require("nodemailer");
+const crypto = require("crypto");
 
 const ADMIN_EMAIL = "visheshofc@gmail.com";
 
@@ -66,6 +68,8 @@ const UserSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+
+  verificationToken: String,
 
   wallet: {
     type: Number,
@@ -388,6 +392,8 @@ try {
         return res.send("Email already registered");
     }
 
+const token = crypto.randomBytes(32).toString("hex");
+
     const hashedPassword = await bcrypt.hash(
         req.body.password,
         10
@@ -402,6 +408,8 @@ try {
         upi: req.body.upi,
         password: hashedPassword,
 
+        verificationToken: token,
+
         role: req.body.email === ADMIN_EMAIL
         ? "admin"
         : "user"
@@ -409,7 +417,33 @@ try {
 
     await newUser.save();
 
-    res.redirect("/login");
+const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
+    }
+});
+
+const verificationLink =
+`https://worksphereindia.onrender.com/verify-email/${token}`;
+
+await transporter.sendMail({
+    from: process.env.EMAIL_USER,
+    to: req.body.email,
+    subject: "Verify Your WorkSphere Account",
+    html: `
+        <h2>Welcome to WorkSphere</h2>
+        <p>Click below to verify your email:</p>
+        <a href="${verificationLink}">
+            Verify Email
+        </a>
+    `
+});
+
+res.send(
+    "Registration successful. Check your email for verification link."
+);
 
 } catch (error) {
 
@@ -442,6 +476,12 @@ try {
         return res.send("Wrong Password");
     }
 
+    if (!user.emailVerified) {
+    return res.send(
+        "Please verify your email first."
+    );
+}
+
     req.session.userId = user._id;
 req.session.userName = user.fullName;
 req.session.role = user.role;
@@ -454,6 +494,37 @@ res.redirect("/dashboard");
     res.send("Login Failed");
 
 }
+
+});
+
+app.get("/verify-email/:token", async (req, res) => {
+
+    try {
+
+        const user = await User.findOne({
+            verificationToken: req.params.token
+        });
+
+        if (!user) {
+            return res.send("Invalid Verification Link");
+        }
+
+        user.emailVerified = true;
+        user.verificationToken = "";
+
+        await user.save();
+
+        res.send(`
+            <h2>Email Verified Successfully</h2>
+            <a href="/login">Click Here To Login</a>
+        `);
+
+    } catch (error) {
+
+        console.log(error);
+        res.send("Verification Failed");
+
+    }
 
 });
 
