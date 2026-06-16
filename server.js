@@ -436,6 +436,7 @@ try {
 
     req.session.userId = user._id;
 req.session.userName = user.fullname;
+req.session.role = user.role;
 
 res.redirect("/dashboard");
 
