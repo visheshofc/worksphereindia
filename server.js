@@ -386,7 +386,7 @@ try {
     );
 
     const newUser = new User({
-        fullname: req.body.fullname,
+        fullName: req.body.fullname,
         email: req.body.email,
         mobile: req.body.mobile,
         aadhaar: req.body.aadhaar,
@@ -435,8 +435,12 @@ try {
     }
 
     req.session.userId = user._id;
-req.session.userName = user.fullname;
+req.session.userName = user.fullName;
 req.session.role = user.role;
+
+if(user.role === "admin"){
+    return res.redirect("/admin");
+}
 
 res.redirect("/dashboard");
 
@@ -602,17 +606,15 @@ app.post("/test", (req, res) => {
 
 app.get("/admin", (req, res) => {
 
-    if (!req.session.adminId) {
-
-        return res.redirect(
-            "/admin-login"
-        );
-
+    if (!req.session.userId) {
+        return res.redirect("/login");
     }
 
-    res.sendFile(
-        __dirname + "/admin.html"
-    );
+    if (req.session.role !== "admin") {
+        return res.send("Access Denied");
+    }
+
+    res.sendFile(__dirname + "/admin.html");
 
 });
 
