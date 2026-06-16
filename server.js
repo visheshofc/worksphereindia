@@ -7,6 +7,8 @@ const session = require("express-session");
 const multer = require("multer");
 const path = require("path");
 
+const ADMIN_EMAIL = "visheshofc@gmail.com";
+
 const app = express();
 
 app.use(express.static(__dirname));
@@ -390,7 +392,11 @@ try {
         aadhaar: req.body.aadhaar,
         pan: req.body.pan,
         upi: req.body.upi,
-        password: hashedPassword
+        password: hashedPassword,
+
+        role: req.body.email === ADMIN_EMAIL
+        ? "admin"
+        : "user"
     });
 
     await newUser.save();
