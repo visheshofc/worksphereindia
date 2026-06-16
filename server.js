@@ -271,6 +271,14 @@ app.get("/dashboard-data", async (req, res) => {
 
 });
 
+app.get("/api/user-role", (req, res) => {
+
+    res.json({
+        role: req.session.role || "user"
+    });
+
+});
+
 app.get("/mytasks", (req, res) => {
 
     if (!req.session.userId) {

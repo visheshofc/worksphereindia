@@ -125,6 +125,9 @@ font-weight:bold;
 <li><a href="/withdraw">Withdraw Funds</a></li>
 <li><a href="/my-withdrawals">My Withdrawals</a></li>
 <li><a href="/support">Support</a></li>
+
+<div id="adminLink"></div>
+
 <a href="/logout">
     <button>Logout</button>
 </a>
@@ -272,6 +275,23 @@ data.rejectedTasks;
 
 document.getElementById("wallet").innerHTML =
 "₹" + data.wallet;
+
+});
+
+
+fetch("/api/user-role")
+.then(res => res.json())
+.then(data => {
+
+    if(data.role === "admin"){
+
+        document.getElementById("adminLink").innerHTML = `
+            <a href="/admin">
+                <h3>Admin Panel</h3>
+            </a>
+        `;
+
+    }
 
 });
 
