@@ -9,6 +9,9 @@ const path = require("path");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
 
+console.log("EMAIL_USER =", process.env.EMAIL_USER);
+console.log("EMAIL_PASS =", process.env.EMAIL_PASS);
+
 const ADMIN_EMAIL = "visheshofc@gmail.com";
 
 const app = express();
