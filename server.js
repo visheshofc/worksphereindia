@@ -429,8 +429,13 @@ const transporter = nodemailer.createTransport({
 });
 
 console.log("Before SMTP Verify");
-await transporter.verify();
-console.log("SMTP Connected");
+
+try {
+    await transporter.verify();
+    console.log("SMTP Connected");
+} catch (err) {
+    console.log("SMTP ERROR:", err);
+}
 
 const verificationLink =
 `https://worksphereindia.onrender.com/verify-email/${token}`;
