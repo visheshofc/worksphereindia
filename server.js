@@ -430,6 +430,9 @@ const transporter = nodemailer.createTransport({
     }
 });
 
+await transporter.verify();
+console.log("SMTP Connected");
+
 const verificationLink =
 `https://worksphereindia.onrender.com/verify-email/${token}`;
 
