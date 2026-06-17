@@ -391,6 +391,9 @@ try {
         email: req.body.email
     });
 
+    console.log("Checking Email:", req.body.email);
+    console.log("Existing User:", existingUser);
+
     if (existingUser) {
         return res.send("Email already registered");
     }
