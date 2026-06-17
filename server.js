@@ -12,6 +12,10 @@ const crypto = require("crypto");
 console.log("EMAIL_USER =", process.env.EMAIL_USER);
 console.log("EMAIL_PASS =", process.env.EMAIL_PASS);
 
+console.log("Before SMTP Verify");
+await transporter.verify();
+console.log("SMTP Connected");
+
 const ADMIN_EMAIL = "visheshofc@gmail.com";
 
 const app = express();
@@ -421,9 +425,7 @@ const token = crypto.randomBytes(32).toString("hex");
     await newUser.save();
 
 const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 587,
-    secure: false,
+    service: "gmail",
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS
