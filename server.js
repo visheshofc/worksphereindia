@@ -434,8 +434,8 @@ const transporter = nodemailer.createTransport({
 console.log("Before SMTP Verify");
 
 try {
-    await transporter.verify();
-    console.log("SMTP Connected");
+    //await transporter.verify();
+    //console.log("SMTP Connected");
 } catch (err) {
     console.log("SMTP ERROR:", err);
 }
@@ -443,18 +443,24 @@ try {
 const verificationLink =
 `https://worksphereindia.onrender.com/verify-email/${token}`;
 
-await transporter.sendMail({
-    from: process.env.EMAIL_USER,
-    to: req.body.email,
-    subject: "Verify Your WorkSphere Account",
-    html: `
-        <h2>Welcome to WorkSphere</h2>
-        <p>Click below to verify your email:</p>
-        <a href="${verificationLink}">
-            Verify Email
-        </a>
-    `
-});
+console.log("Before Send Mail");
+
+try {
+    await transporter.sendMail({
+        from: process.env.EMAIL_USER,
+        to: req.body.email,
+        subject: "Verify Your WorkSphere Account",
+        html: `
+        <h2>Verify Email</h2>
+        <a href="${verificationLink}">Verify Account</a>
+        `
+    });
+
+    console.log("After Send Mail");
+
+} catch (err) {
+    console.log("SEND MAIL ERROR:", err);
+}
 
 res.send(
     "Registration successful. Check your email for verification link."
