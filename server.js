@@ -454,6 +454,27 @@ res.send(
 
 });
 
+app.get("/verify-email/:token", async (req, res) => {
+
+    const user = await User.findOne({
+        verificationToken: req.params.token
+    });
+
+    if (!user) {
+        return res.send("Invalid verification link");
+    }
+
+    user.emailVerified = true;
+    user.verificationToken = "";
+
+    await user.save();
+
+    res.send(
+        "Email verified successfully. You can now login."
+    );
+
+});
+
 // Login User
 app.post("/login", async (req, res) => {
 
