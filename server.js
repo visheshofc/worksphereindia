@@ -9,9 +9,6 @@ const path = require("path");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
 
-console.log("EMAIL_USER =", process.env.EMAIL_USER);
-console.log("EMAIL_PASS =", process.env.EMAIL_PASS);
-
 const ADMIN_EMAIL = "visheshofc@gmail.com";
 
 const app = express();
@@ -425,12 +422,13 @@ const token = crypto.randomBytes(32).toString("hex");
 
 const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
-    port: 587,
-    secure: false,
+    port: 465,
+    secure: true,
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS
-    }
+    },
+    family: 4
 });
 
 console.log("Before SMTP Verify");
