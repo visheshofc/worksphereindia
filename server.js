@@ -269,15 +269,14 @@ app.get("/dashboard-data", async (req, res) => {
     req.session.userId
 );
 
-       res.json({
-    userName: req.session.userName,
+res.json({
+    userName: user.fullName,
     totalTasks,
     approvedTasks,
     pendingTasks,
     rejectedTasks,
     wallet: user.wallet
 });
-
     } catch (error) {
 
         console.log(error);
@@ -602,15 +601,21 @@ app.post(
 
 app.post("/approve-upload/:id", async (req, res) => {
 
-    const upload =
-        await Upload.findById(req.params.id);
+    const upload = await Upload.findById(req.params.id);
 
-    await Upload.findByIdAndUpdate(
-        req.params.id,
-        {
-            status: "Approved"
-        }
-    );
+    console.log("UPLOAD APPROVED");
+console.log(upload);
+
+    if (!upload) {
+        return res.send("Upload Not Found");
+    }
+
+    if (upload.status === "Approved") {
+        return res.redirect("/admin");
+    }
+
+    upload.status = "Approved";
+    await upload.save();
 
     await User.findByIdAndUpdate(
         upload.userId,
