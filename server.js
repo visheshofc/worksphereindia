@@ -119,6 +119,16 @@ const UploadSchema = new mongoose.Schema({
 
     fileName: String,
 
+    amount: {
+        type: Number,
+        default: 30
+    },
+
+    status: {
+        type: String,
+        default: "Pending"
+    },
+
     uploadDate: {
         type: Date,
         default: Date.now
@@ -666,7 +676,11 @@ app.post(
                         req.body.projectName,
 
                     fileName:
-                        req.file.filename
+                        req.file.filename,
+
+                        amount: 30,
+
+                        status: "Pending"
 
                 });
 
@@ -688,6 +702,31 @@ app.post(
 
     }
 );
+
+app.post("/approve-upload/:id", async (req, res) => {
+
+    const upload =
+        await Upload.findById(req.params.id);
+
+    await Upload.findByIdAndUpdate(
+        req.params.id,
+        {
+            status: "Approved"
+        }
+    );
+
+    await User.findByIdAndUpdate(
+        upload.userId,
+        {
+            $inc: {
+                wallet: upload.amount
+            }
+        }
+    );
+
+    res.redirect("/admin");
+
+});
 
 app.get("/api/mytasks", async (req, res) => {
 
@@ -786,15 +825,6 @@ app.post("/approve/:id", async (req, res) => {
         req.params.id,
         {
             status: "Approved"
-        }
-    );
-
-    await User.findByIdAndUpdate(
-        application.userId,
-        {
-            $inc: {
-                wallet: 500
-            }
         }
     );
 
