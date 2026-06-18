@@ -136,22 +136,31 @@ fetch("/api/admin/uploads")
 
         html += `
 <tr>
+
     <td>${file.projectName}</td>
 
     <td>${file.fileName}</td>
 
     <td>
-        ${new Date(
-            file.uploadDate
-        ).toLocaleDateString()}
+        ${new Date(file.uploadDate).toLocaleDateString()}
     </td>
 
+    <td>${file.status}</td>
+
     <td>
+
         <a href="/download/${file.fileName}">
-            <button>
-                Download
-            </button>
+            <button>Download</button>
         </a>
+
+        <form action="/approve-upload/${file._id}"
+              method="POST"
+              style="display:inline;">
+            <button>
+                Approve Upload
+            </button>
+        </form>
+
     </td>
 
 </tr>
@@ -159,9 +168,7 @@ fetch("/api/admin/uploads")
 
     });
 
-    document.getElementById(
-        "uploadTable"
-    ).innerHTML = html;
+    document.getElementById("uploadTable").innerHTML = html;
 
 });
 
