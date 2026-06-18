@@ -69,7 +69,8 @@
 <th>Project</th>
 <th>File Name</th>
 <th>Upload Date</th>
-<th>Download</th>
+<th>Status</th>
+<th>Action</th>
 </tr>
 </thead>
 
@@ -125,8 +126,9 @@ fetch("/api/admin/uploads")
 
     data.forEach(file => {
 
-        html += `
+       html += `
 <tr>
+
     <td>${file.projectName}</td>
 
     <td>${file.fileName}</td>
@@ -137,12 +139,26 @@ fetch("/api/admin/uploads")
         ).toLocaleDateString()}
     </td>
 
+    <td>${file.status}</td>
+
     <td>
+
         <a href="/download/${file.fileName}">
             <button>
                 Download
             </button>
         </a>
+
+        <form
+            action="/approve-upload/${file._id}"
+            method="POST"
+            style="display:inline;"
+        >
+            <button>
+                Approve Upload
+            </button>
+        </form>
+
     </td>
 
 </tr>
