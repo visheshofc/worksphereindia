@@ -601,21 +601,18 @@ app.post(
 
 app.post("/approve-upload/:id", async (req, res) => {
 
+    console.log("========== APPROVE CLICKED ==========");
+
     const upload = await Upload.findById(req.params.id);
 
-    console.log("UPLOAD APPROVED");
-console.log(upload);
+    console.log("UPLOAD:", upload);
 
     if (!upload) {
         return res.send("Upload Not Found");
     }
 
-    if (upload.status === "Approved") {
-        return res.redirect("/admin");
-    }
-
-    upload.status = "Approved";
-    await upload.save();
+    const beforeUser = await User.findById(upload.userId);
+    console.log("BEFORE WALLET:", beforeUser.wallet);
 
     await User.findByIdAndUpdate(
         upload.userId,
@@ -626,8 +623,13 @@ console.log(upload);
         }
     );
 
-    res.redirect("/admin");
+    const afterUser = await User.findById(upload.userId);
+    console.log("AFTER WALLET:", afterUser.wallet);
 
+    upload.status = "Approved";
+    await upload.save();
+
+    res.redirect("/admin");
 });
 
 app.get("/api/mytasks", async (req, res) => {
