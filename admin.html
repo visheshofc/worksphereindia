@@ -21,6 +21,8 @@
 
 <thead>
 <tr>
+<th>Name</th>
+<th>Email</th>
 <th>Project</th>
 <th>Status</th>
 <th>Action</th>
@@ -92,25 +94,31 @@ fetch("/api/admin/applications")
 
     data.forEach(app => {
 
-        html += `
-        <tr>
-            <td>${app.projectName}</td>
-            <td>${app.status}</td>
+     html += `
+<tr>
 
-            <td>
+    <td>${app.userName}</td>
 
-            <form action="/approve/${app._id}" method="POST" style="display:inline;">
-                <button>Approve</button>
-            </form>
+    <td>${app.userEmail}</td>
 
-            <form action="/reject/${app._id}" method="POST" style="display:inline;">
-                <button>Reject</button>
-            </form>
+    <td>${app.projectName}</td>
 
-            </td>
+    <td>${app.status}</td>
 
-        </tr>
-        `;
+    <td>
+
+        <form action="/approve/${app._id}" method="POST" style="display:inline;">
+            <button>Approve</button>
+        </form>
+
+        <form action="/reject/${app._id}" method="POST" style="display:inline;">
+            <button>Reject</button>
+        </form>
+
+    </td>
+
+</tr>
+`;
 
     });
 
@@ -126,9 +134,8 @@ fetch("/api/admin/uploads")
 
     data.forEach(file => {
 
-       html += `
+        html += `
 <tr>
-
     <td>${file.projectName}</td>
 
     <td>${file.fileName}</td>
@@ -139,26 +146,12 @@ fetch("/api/admin/uploads")
         ).toLocaleDateString()}
     </td>
 
-    <td>${file.status}</td>
-
     <td>
-
         <a href="/download/${file.fileName}">
             <button>
                 Download
             </button>
         </a>
-
-        <form
-            action="/approve-upload/${file._id}"
-            method="POST"
-            style="display:inline;"
-        >
-            <button>
-                Approve Upload
-            </button>
-        </form>
-
     </td>
 
 </tr>

@@ -92,6 +92,8 @@ const Admin = mongoose.model(
 
 const ApplicationSchema = new mongoose.Schema({
     userId: String,
+    userName: String,
+    userEmail: String,
 
     projectName: String,
 
@@ -523,30 +525,31 @@ app.post("/apply", async (req, res) => {
 
     try {
 
-        const application =
-            new Application({
+        const user = await User.findById(
+            req.session.userId
+        );
 
-                userId:
-                    req.session.userId,
+        const application = new Application({
 
-                projectName:
-                    req.body.projectName
+            userId: req.session.userId,
 
-            });
+            userName: user.fullName,
+
+            userEmail: user.email,
+
+            projectName: req.body.projectName
+
+        });
 
         await application.save();
 
-        res.send(
-            "Project Applied Successfully"
-        );
+        res.send("Project Applied Successfully");
 
     } catch (error) {
 
         console.log(error);
 
-        res.send(
-            "Application Failed"
-        );
+        res.send("Application Failed");
 
     }
 
